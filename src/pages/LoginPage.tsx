@@ -43,12 +43,12 @@ export default function LoginPage() {
         res.data.data.accessToken;
 
       // 토큰 잘 들어 왔는지 체크
-      if (token) {
+      if (!token) {
         alert('서버 응답에 토큰이 없습니다.');
         return;
       }
 
-      // localStorage에 저장
+      // localStorage에 저장 (새로고침 시 로그인 유지)
       localStorage.setItem("accessToken", token);
 
       // JWT decode해서 payload 확인

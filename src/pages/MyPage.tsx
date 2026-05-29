@@ -81,16 +81,33 @@ export default function MyPage() {
         {error && <p style={{ color: "red" }}>{error}</p>}
         {/* 유저 정보가 있으면 표시 */}
         {userInfo && (
-          <div className="profile-info">
-            <img width="128" height="128" src="https://img.icons8.com/color-pixels/64/lion.png" alt="lion"/>
-            <h2>안녕하세요! {userInfo.nickname}님!</h2>
-            <p>{userInfo.email}</p>
+          <>
+            <div className="mypage-header">
+              <img className="avatar" width="100" height="100" src="https://img.icons8.com/color-pixels/64/lion.png" alt="lion"/>
+              <h2>안녕하세요! {userInfo.nickname}님!</h2>
+            </div>
 
+            <div className="mypage-info">
+              <div className="info-row">
+                <span className="info-label">이름</span>
+                <span className="info-value">{userInfo.name}</span>
+              </div>
+              <div className="info-row">
+                <span className="info-label">이메일</span>
+                <span className="info-value">{userInfo.email}</span>
+              </div>
+              <div className="info-row">
+                <span className="info-label">닉네임</span>
+                <span className="info-value">{userInfo.nickname}</span>
+              </div>
+            </div>
+            
             <button 
-              className="primary-button" 
-              onClick={handleLogout}
-              >로그아웃</button>
-          </div>
+                className="primary-button" 
+                onClick={handleLogout}
+              >로그아웃
+            </button>
+          </>
         )}
       </div>
     </div>
