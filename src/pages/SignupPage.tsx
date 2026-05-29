@@ -21,7 +21,7 @@ export default function SignupPage() {
     try{
       // POST /api/auth/signup 으로 이름, 이메일, 비밀번호 전송
       // 회원가입은 응답으로 토큰이 아닌 성공 메시지만 받음
-      await axios.post("/api/auth/signup", {email, password, name});
+      await axios.post("/api/auth/signup", {email, password, name, nickname});
       console.log("회원가입 성공");
 
       // 회원가입 성공 시 로그인 페이지 이동

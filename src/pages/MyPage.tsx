@@ -6,6 +6,7 @@ import axios from "axios";
 interface UserInfo{
     name: string;
     email: string;
+    nickname: string;
 }
 
 export default function MyPage() {
@@ -29,12 +30,12 @@ export default function MyPage() {
         }
 
         // GET /api/user/me 요청 시 Authorization 헤더에 토큰 담기
-        const res = await axios.get("/api/user/me", {
+        const res = await axios.get("/api/members/me", {
           headers: {Authorization: `Bearer ${token}`},
         });
 
         // 응답에서 유저 정보 저장
-        setUserInfo(res.data);
+        setUserInfo(res.data.data);
       }catch(err: any){
         const status = err.response?.status;
         if(status === 401){
@@ -51,6 +52,25 @@ export default function MyPage() {
     fetchUserInfo();
   }, []); // [] 빈 배열 : 처음 한 번만 실행
 
+  // 로그아웃 -> 토큰, 이메일 삭제 후 로그인 페이지로 이동
+  // 백엔드에도 로그아웃 요청
+  const handleLogout = async () =>{
+    // localStorage에서 토큰 꺼내기
+    const token = localStorage.getItem("accessToken");
+    try{
+      await axios.post("/api/auth/logout", {}, {
+        headers: {Authorization: `Bearer ${token}`}
+      });
+    } catch(err){
+      // 로그아웃 API 실패해도 로컬 토큰 삭제;
+    } finally{
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("userEmail");
+      alert("로그아웃");
+      navigate("/login");
+    }
+  }
+
 
   return (
     <div className="wrapper">
@@ -62,10 +82,13 @@ export default function MyPage() {
         {userInfo && (
           <div className="profile-info">
             <img width="128" height="128" src="https://img.icons8.com/color-pixels/64/lion.png" alt="lion"/>
-            <h2>안녕하세요! {userInfo.name}님!</h2>
+            <h2>안녕하세요! {userInfo.nickname}님!</h2>
             <p>{userInfo.email}</p>
 
-            <button className="primary-button">로그아웃</button>
+            <button 
+              className="primary-button" 
+              onClick={handleLogout}
+              >로그아웃</button>
           </div>
         )}
       </div>

@@ -38,9 +38,9 @@ export default function LoginPage() {
         password,
       });
 
-      // 토큰 body, header로 주는 경우 커버
+      // 명세서에 맞게 변경 { "data": { "accessToken": "..." } }
       const rawToken =
-        res.data.accessToken || res.headers['authorization'];
+        res.data.data.accessToken;
 
       // 토큰 잘 들어 왔는지 체크
       if (!rawToken) {
