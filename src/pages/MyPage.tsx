@@ -22,12 +22,13 @@ export default function MyPage() {
         // localStorage에서 토큰 꺼내기
         const token = localStorage.getItem("accessToken");
 
-        // 토큰 없으면 바로 로그인 페이지로 이동
-        if (!token) {
-          alert("로그인이 필요합니다.");
-          navigate("/login");
-          return;
-        }
+        // 토큰 없으면 바로 로그인 페이지로 이동 
+        // if (!token) {
+        //   alert("로그인이 필요합니다.");
+        //   navigate("/login");
+        //   return;
+        // }
+        // -> 보호라우트를 통해 체크
 
         // GET /api/user/me 요청 시 Authorization 헤더에 토큰 담기
         const res = await axios.get("/api/members/me", {

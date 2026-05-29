@@ -3,6 +3,7 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import MyPage from "./pages/MyPage";
 import ForbiddenPage from "./pages/ForbiddenPage";
+import ProtectedRoute from "./ProtectedRoute";
 
 import "./App.css";
 
@@ -19,7 +20,11 @@ export default function App() {
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
-        <Route path="/login/mypage" element={<MyPage />} />
+        <Route path="/login/mypage" element={
+          <ProtectedRoute>
+          <MyPage />
+          </ProtectedRoute>
+        } />
         <Route path="/forbidden" element={<ForbiddenPage />} /> {/* 403 에러 페이지 */}
       </Routes>
     </BrowserRouter>

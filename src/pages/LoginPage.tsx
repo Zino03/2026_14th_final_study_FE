@@ -39,21 +39,14 @@ export default function LoginPage() {
       });
 
       // 명세서에 맞게 변경 { "data": { "accessToken": "..." } }
-      const rawToken =
+      const token =
         res.data.data.accessToken;
 
       // 토큰 잘 들어 왔는지 체크
-      if (!rawToken) {
+      if (token) {
         alert('서버 응답에 토큰이 없습니다.');
         return;
       }
-
-      // 헤더로 오는 경우 앞에 Bearer 자르기
-      const token = rawToken.startsWith('Bearer ')
-        ? rawToken.slice(7)
-        : rawToken;
-
-      console.log(token);
 
       // localStorage에 저장
       localStorage.setItem("accessToken", token);
@@ -70,7 +63,9 @@ export default function LoginPage() {
       const status = err.response?.status;
       console.log(status);
 
-      if (status === 401){
+      if (status === 400){
+        setError("이메일과 비밀번호 모두 입력해주세요.");
+      }else if (status === 401){
         setError("이메일 또는 비밀번호가 올바르지 않습니다.");
       } else{
         setError("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");

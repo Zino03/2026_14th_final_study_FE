@@ -5,6 +5,7 @@ import axios from "axios";
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
 
@@ -17,12 +18,37 @@ export default function SignupPage() {
     e.preventDefault();
     setError(""); // 에러 초기화
 
+    // 필수값 누락 체크
+    if (!email || !password || !name || !nickname) {
+      setError("모든 항목을 입력해주세요.");
+      return;
+    }
+
+    // 이메일 형식 확인
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("올바른 이메일 형식이 아닙니다.");
+      return;
+    }
+
+    // 비밀번호 최소 길이 + 영문, 숫자 포함
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setError("비밀번호는 영문, 숫자를 포함한 8자 이상이어야 합니다.");
+      return;
+    }
+
+    // 비밀번호 확인 일치
+    if (password !== confirmPassword) {
+      setError("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
     setLoading(true) // loading 상태
     try{
       // POST /api/auth/signup 으로 이름, 이메일, 비밀번호 전송
       // 회원가입은 응답으로 토큰이 아닌 성공 메시지만 받음
       await axios.post("/api/auth/signup", {email, password, name, nickname});
-      console.log("회원가입 성공");
 
       // 회원가입 성공 시 로그인 페이지 이동
       navigate("/login");
@@ -31,7 +57,9 @@ export default function SignupPage() {
       const status = err.response?.status;
 
       if(status === 400){
-        setError("이미 존재하는 이메일입니다.");
+        setError("입력값을 확인해주세요.");
+      }else if(status === 409){
+        setError("이미 존재하는 이메일 또는 닉네임입니다.");
       }else{
         setError("서버 오류가 발생했습니다.");
       }
@@ -56,6 +84,12 @@ export default function SignupPage() {
             <label>비밀번호</label>
             <input type="password" placeholder="password" value={password}
               onChange={(e) => setPassword(e.target.value)} />
+          </div>
+
+          <div className="input-style">
+            <label>비밀번호 확인</label>
+            <input type="password" placeholder="비밀번호 확인" value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)} />
           </div>
 
           <div className="input-style">
