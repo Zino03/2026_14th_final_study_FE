@@ -4,8 +4,12 @@ import axios from "axios";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
+  const [emailChecked, setEmailChecked] = useState(false); // 중복 확인 통과 여부
+  const [emailMsg, setEmailMsg] = useState(""); // 확인 결과 메시지
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
   const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
 
@@ -13,13 +17,44 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate(); // 페이지 이동 함수
 
+  const handleCheckEmail = async () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // 이메일 입력 확인
+    if (!email) {
+      setEmailMsg("이메일을 입력해주세요.");
+      return;
+    }
+
+    // 이메일 형식 체크
+    if (!emailRegex.test(email)) {
+      setEmailMsg("올바른 이메일 형식이 아닙니다.");
+      return;
+    }
+    try {
+      // 백엔드에 email check 요청
+      await axios.get(`/api/auth/check-email?email=${encodeURIComponent(email)}`);
+      setEmailChecked(true);
+      setEmailMsg("사용 가능한 이메일입니다.");
+    } catch(err: any) {
+      setEmailChecked(false);
+      const status = err.response?.status;
+      if (status === 409) {
+        setEmailMsg("이미 사용 중인 이메일입니다.");
+      } else {
+        setEmailMsg("확인 중 오류가 발생했습니다.");
+      }
+    }
+  };
+
+
   // 회원가입 버튼을 눌렀을 때 실행되는 함수
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(""); // 에러 초기화
 
     // 필수값 누락 체크
-    if (!email || !password || !name || !nickname) {
+    if (!email || !password || !confirmPassword || !name || !nickname) {
       setError("모든 항목을 입력해주세요.");
       return;
     }
@@ -28,6 +63,12 @@ export default function SignupPage() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError("올바른 이메일 형식이 아닙니다.");
+      return;
+    }
+
+    // 중복 확인 여부 체크
+    if (!emailChecked) {
+      setError("이메일 중복 확인을 해주세요.");
       return;
     }
 
@@ -76,8 +117,22 @@ export default function SignupPage() {
         <form onSubmit={handleSignup}>
           <div className="input-style">
             <label>이메일</label>
-            <input type="email" placeholder="email" value={email}
-              onChange={(e) => setEmail(e.target.value)} />
+            <div className="email-check">
+              <input type="email" placeholder="email" value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                  setEmailChecked(false);
+                  setEmailMsg("");
+                }} />
+              <button type="button" className="check-button" onClick={handleCheckEmail}>
+                중복 확인
+              </button>
+            </div>
+            {emailMsg && (
+              <p style={{ fontSize: "12px", color: emailChecked ? "green" : "red" }}>
+                {emailMsg}
+              </p>
+            )}
           </div>
 
           <div className="input-style">

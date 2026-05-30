@@ -19,7 +19,7 @@ form{
 }
 
 .card {
-  width: 320px;
+  width: 480px;
   padding: 48px 40px;
   border-radius: 16px;
   box-shadow: 0 4px 16px rgb(255, 182, 72);
@@ -53,6 +53,7 @@ form{
   background-color: #f0f0f0;
   font-size: 16px;
   outline: none;
+  flex: 1;
 }
 
 .primary-button{
@@ -140,4 +141,26 @@ form{
   font-size: 14px;
   font-weight: bold;
   color: #333;
+}
+
+.check-button {
+  padding: 0 16px;
+  background: white;
+  color: orange;
+  border: 1.5px solid orange;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.check-button:hover {
+  background: #fff5e6;
+}
+
+.email-check{
+  display: flex;
+  gap: 8px;
 }

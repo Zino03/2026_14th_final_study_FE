@@ -83,7 +83,7 @@ export default function MyPage() {
         {userInfo && (
           <>
             <div className="mypage-header">
-              <img className="avatar" width="100" height="100" src="https://img.icons8.com/color-pixels/64/lion.png" alt="lion"/>
+              <img width="100" height="100" src="https://img.icons8.com/color-pixels/64/lion.png" alt="lion"/>
               <h2>안녕하세요! {userInfo.nickname}님!</h2>
             </div>
 

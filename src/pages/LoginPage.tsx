@@ -61,7 +61,6 @@ export default function LoginPage() {
     } catch(err: any){
       // 에러 응답 시
       const status = err.response?.status;
-      console.log(status);
 
       if (status === 400){
         setError("이메일과 비밀번호 모두 입력해주세요.");
